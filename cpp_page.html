@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumbled Code Game</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            height: 90vh;
+            margin-top: 20px;
+        }
+        .left-panel {
+            width: 30%;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-y: auto;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .right-panel {
+            width: 70%;
+            background: #ffffff;
+            padding: 15px;
+            margin-left: 15px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .program-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .program-item:hover {
+            background-color: #f0f0f0;
+        }
+        .title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+        }
+        .code-box {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            overflow-y: auto;
+            min-height: 300px;
+            margin-bottom: 15px;
+        }
+        .code-line {
+            padding: 5px;
+            cursor: grab;
+            background-color: #ffffff;
+            margin: 3px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .code-line:hover {
+            background-color: #f1f1f1;
+        }
+        .submit-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Panel - List of Programs -->
+    <div class="left-panel">
+        <h4>Select a Program</h4>
+        <ul id="program-list"></ul>
+    </div>
+
+    <!-- Right Panel - Code Area -->
+    <div class="right-panel">
+        <div class="title-container">
+            <h4 id="program-title">Arrange the Code</h4>
+            <div class="timer" id="timer">Time: 0s</div>
+        </div>
+        <div id="code-container" class="code-box"></div>
+        <div class="submit-container">
+            <button class="btn btn-success" id="submit-button">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const programs = {
+    "C++ program to print \"Hello World\"": [
+        "#include <iostream>",
+        "using namespace std;",
+        "int main() {",
+        "    cout << \"Hello World\" << endl;",
+        "    return 0;",
+        "}"
+    ],
+    "C++ program to find Armstrong number": [
+        "#include <iostream>",
+        "#include <cmath>",
+        "using namespace std;",
+        "int main() {",
+        "    int num, sum = 0, temp, remainder, n = 0;",
+        "    cout << \"Enter an integer: \";",
+        "    cin >> num;",
+        "    temp = num;",
+        "    while (temp != 0) {",
+        "        temp /= 10;",
+        "        ++n;",
+        "    }",
+        "    temp = num;",
+        "    while (temp != 0) {",
+        "        remainder = temp % 10;",
+        "        sum += pow(remainder, n);",
+        "        temp /= 10;",
+        "    }",
+        "    if (sum == num)",
+        "        cout << num << \" is an Armstrong number.\" << endl;",
+        "    else",
+        "        cout << num << \" is not an Armstrong number.\" << endl;",
+        "    return 0;",
+        "}"
+    ],
+    "C++ program to overload operators": [
+        "#include <iostream>",
+        "using namespace std;",
+        "class Complex {",
+        "    private:",
+        "        float real;",
+        "        float imag;",
+        "    public:",
+        "        Complex() : real(0), imag(0) {}",
+        "        Complex operator + (const Complex& c) {",
+        "            Complex temp;",
+        "            temp.real = real + c.real;",
+        "            temp.imag = imag + c.imag;",
+        "            return temp;",
+        "        }",
+        "        void setValues(float r, float i) {",
+        "            real = r;",
+        "            imag = i;",
+        "        }",
+        "        void display() {",
+        "            cout << real << \" + \" << imag << \"i\" << endl;",
+        "        }",
+        "};",
+        "int main() {",
+        "    Complex c1, c2, c3;",
+        "    c1.setValues(3.5, 4.5);",
+        "    c2.setValues(1.5, 2.5);",
+        "    c3 = c1 + c2;",
+        "    c3.display();",
+        "    return 0;",
+        "}"
+    ],
+    "C++ program to implement a stack using arrays": [
+        "#include <iostream>",
+        "using namespace std;",
+        "class Stack {",
+        "    private:",
+        "        int top;",
+        "        int arr[5];",
+        "    public:",
+        "        Stack() { top = -1; }",
+        "        void push(int value) {",
+        "            if (top < 4) {",
+        "                arr[++top] = value;",
+        "                cout << value << \" pushed to stack\" << endl;",
+        "            } else {",
+        "                cout << \"Stack Overflow!\" << endl;",
+        "            }",
+        "        }",
+        "        void pop() {",
+        "            if (top >= 0) {",
+        "                cout << arr[top--] << \" popped from stack\" << endl;",
+        "            } else {",
+        "                cout << \"Stack Underflow!\" << endl;",
+        "            }",
+        "        }",
+        "        void display() {",
+        "            if (top >= 0) {",
+        "                cout << \"Stack elements are: \";",
+        "                for (int i = 0; i <= top; i++) {",
+        "                    cout << arr[i] << \" \";",
+        "                }",
+        "                cout << endl;",
+        "            } else {",
+        "                cout << \"Stack is empty!\" << endl;",
+        "            }",
+        "        }",
+        "};",
+        "int main() {",
+        "    Stack s;",
+        "    s.push(10);",
+        "    s.push(20);",
+        "    s.push(30);",
+        "    s.display();",
+        "    s.pop();",
+        "    s.display();",
+        "    return 0;",
+        "}"
+    ],
+    "C++ program to reverse a linked list": [
+        "#include <iostream>",
+        "using namespace std;",
+        "class Node {",
+        "    public:",
+        "        int data;",
+        "        Node* next;",
+        "};",
+        "void push(Node** head_ref, int new_data) {",
+        "    Node* new_node = new Node();",
+        "    new_node->data = new_data;",
+        "    new_node->next = *head_ref;",
+        "    *head_ref = new_node;",
+        "}",
+        "void printList(Node* node) {",
+        "    while (node != NULL) {",
+        "        cout << node->data << \" \";",
+        "        node = node->next;",
+        "    }",
+        "    cout << endl;",
+        "}",
+        "void reverse(Node** head_ref) {",
+        "    Node* prev = NULL;",
+        "    Node* current = *head_ref;",
+        "    Node* next = NULL;",
+        "    while (current != NULL) {",
+        "        next = current->next;",
+        "        current->next = prev;",
+        "        prev = current;",
+        "        current = next;",
+        "    }",
+        "    *head_ref = prev;",
+        "}",
+        "int main() {",
+        "    Node* head = NULL;",
+        "    push(&head, 10);",
+        "    push(&head, 20);",
+        "    push(&head, 30);",
+        "    cout << \"Original Linked List: \";",
+        "    printList(head);",
+        "    reverse(&head);",
+        "    cout << \"Reversed Linked List: \";",
+        "    printList(head);",
+        "    return 0;",
+        "}"
+    ],
+    "C++ program for file handling": [
+        "#include <iostream>",
+        "#include <fstream>",
+        "using namespace std;",
+        "int main() {",
+        "    ofstream outfile;",
+        "    outfile.open(\"example.txt\");",
+        "    outfile << \"This is an example file.\\n\";",
+        "    outfile << \"File handling in C++.\\n\";",
+        "    outfile.close();",
+        "    ifstream infile;",
+        "    infile.open(\"example.txt\");",
+        "    string line;",
+        "    while (getline(infile, line)) {",
+        "        cout << line << endl;",
+        "    }",
+        "    infile.close();",
+        "    return 0;",
+        "}"
+    ],
+    "C++ program for binary search": [
+        "#include <iostream>",
+        "using namespace std;",
+        "int binarySearch(int arr[], int size, int target) {",
+        "    int left = 0, right = size - 1;",
+        "    while (left <= right) {",
+        "        int mid = left + (right - left) / 2;",
+        "        if (arr[mid] == target)",
+        "            return mid;",
+        "        else if (arr[mid] < target)",
+        "            left = mid + 1;",
+        "        else",
+        "            right = mid - 1;",
+        "    }",
+        "    return -1;",
+        "}",
+        "int main() {",
+        "    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};",
+        "    int size = sizeof(arr) / sizeof(arr[0]);",
+        "    int target = 5;",
+        "    int result = binarySearch(arr, size, target);",
+        "    if (result != -1)",
+        "        cout << \"Element found at index \" << result << endl;",
+        "    else",
+        "        cout << \"Element not found\" << endl;",
+        "    return 0;",
+        "}"
+    ],
+    "C++ program for polymorphism example": [
+        "#include <iostream>",
+        "using namespace std;",
+        "class Base {",
+        "    public:",
+        "        virtual void display() {",
+        "            cout << \"Base class display\" << endl;",
+        "        }",
+        "};",
+        "class Derived : public Base {",
+        "    public:",
+        "        void display() override {",
+        "            cout << \"Derived class display\" << endl;",
+        "        }",
+        "};",
+        "int main() {",
+        "    Base* base_ptr;",
+        "    Derived derived_obj;",
+        "    base_ptr = &derived_obj;",
+        "    base_ptr->display(); // This will call Derived class's display method",
+        "    return 0;",
+        "}"
+    ],
+    "C++ program to check palindrome string": [
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;",
+        "bool isPalindrome(string str) {",
+        "    int start = 0, end = str.length() - 1;",
+        "    while (start < end) {",
+        "        if (str[start] != str[end])",
+        "            return false;",
+        "        start++;",
+        "        end--;",
+        "    }",
+        "    return true;",
+        "}",
+        "int main() {",
+        "    string str;",
+        "    cout << \"Enter a string: \";",
+        "    cin >> str;",
+        "    if (isPalindrome(str))",
+        "        cout << str << \" is a palindrome.\" << endl;",
+        "    else",
+        "        cout << str << \" is not a palindrome.\" << endl;",
+        "    return 0;",
+        "}"
+    ],
+    "C++ program for inheritance example": [
+        "#include <iostream>",
+        "using namespace std;",
+        "class Animal {",
+        "    public:",
+        "        void speak() {",
+        "            cout << \"Animal speaks\" << endl;",
+        "        }",
+        "};",
+        "class Dog : public Animal {",
+        "    public:",
+        "        void speak() {",
+        "            cout << \"Dog barks\" << endl;",
+        "        }",
+        "};",
+        "int main() {",
+        "    Dog d;",
+        "    d.speak(); // Calls Dog class's speak method",
+        "    return 0;",
+        "}"
+    ]
+
+
+    };
+
+    let currentProgram = "";
+    let timerInterval;
+    let timeElapsed = 0;
+    
+    function loadPrograms() {
+        const programList = document.getElementById("program-list");
+        for (let program in programs) {
+            let li = document.createElement("li");
+            li.innerText = program;
+            li.className = "program-item";
+            li.onclick = () => loadJumbledCode(program);
+            programList.appendChild(li);
+        }
+    }
+
+    function loadJumbledCode(program) {
+        currentProgram = program;
+        document.getElementById("program-title").innerText = program;
+        const codeContainer = document.getElementById("code-container");
+        codeContainer.innerHTML = "";
+
+        let shuffledCode = [...programs[program]].sort(() => Math.random() - 0.5);
+        shuffledCode.forEach(line => {
+            let div = document.createElement("div");
+            div.innerText = line;
+            div.className = "code-line";
+            div.draggable = true;
+            div.ondragstart = dragStart;
+            div.ondragover = dragOver;
+            div.ondrop = drop;
+            codeContainer.appendChild(div);
+        });
+
+        startTimer();
+    }
+
+    function dragStart(event) {
+        event.dataTransfer.setData("text", event.target.innerText);
+        event.target.classList.add("dragging");
+    }
+
+    function dragOver(event) {
+        event.preventDefault();
+    }
+
+    function drop(event) {
+        event.preventDefault();
+        const draggedText = event.dataTransfer.getData("text");
+        let draggedElement = document.querySelector(".dragging");
+        let targetElement = event.target;
+        if (targetElement.className.includes("code-line")) {
+            let temp = targetElement.innerText;
+            targetElement.innerText = draggedText;
+            draggedElement.innerText = temp;
+        }
+        draggedElement.classList.remove("dragging");
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timeElapsed = 0;
+        document.getElementById("timer").innerText = `Time: ${timeElapsed}s`;
+        timerInterval = setInterval(() => {
+            timeElapsed++;
+            document.getElementById("timer").innerText = `Time: ${timeElapsed}s`;
+        }, 1000);
+    }
+
+    document.getElementById("submit-button").addEventListener("click", function () {
+        let userCode = Array.from(document.getElementById("code-container").children).map(li => li.innerText.trim());
+        let correctCode = programs[currentProgram].map(line => line.trim());
+
+        if (JSON.stringify(userCode) === JSON.stringify(correctCode)) {
+            clearInterval(timerInterval);
+            alert(`✅ Well Done! You completed it in ${timeElapsed} seconds! Moving to the next question...`);
+            loadJumbledCode(Object.keys(programs)[(Object.keys(programs).indexOf(currentProgram) + 1) % Object.keys(programs).length]);
+        } else {
+            alert("❌ Incorrect! Try Again.");
+        }
+    });
+
+    loadPrograms();
+</script>
+
+</body>
+</html>

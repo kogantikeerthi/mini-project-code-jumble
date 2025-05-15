@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumbled Code Game</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            height: 90vh;
+            margin-top: 20px;
+        }
+        .left-panel {
+            width: 30%;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-y: auto;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .right-panel {
+            width: 70%;
+            background: #ffffff;
+            padding: 15px;
+            margin-left: 15px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .program-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .program-item:hover {
+            background-color: #f0f0f0;
+        }
+        .title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+        }
+        .code-box {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            overflow-y: auto;
+            min-height: 300px;
+            margin-bottom: 15px;
+        }
+        .code-line {
+            padding: 5px;
+            cursor: grab;
+            background-color: #ffffff;
+            margin: 3px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .code-line:hover {
+            background-color: #f1f1f1;
+        }
+        .submit-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Panel - List of Programs -->
+    <div class="left-panel">
+        <h4>Select a Program</h4>
+        <ul id="program-list"></ul>
+    </div>
+
+    <!-- Right Panel - Code Area -->
+    <div class="right-panel">
+        <div class="title-container">
+            <h4 id="program-title">Arrange the Code</h4>
+            <div class="timer" id="timer">Time: 0s</div>
+        </div>
+        <div id="code-container" class="code-box"></div>
+        <div class="submit-container">
+            <button class="btn btn-success" id="submit-button">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const programs = {
+    "Java program to print \"Hello World\"": [
+        "public class HelloWorld {",
+        "    public static void main(String[] args) {",
+        "        System.out.println(\"Hello World\");",
+        "    }",
+        "}"
+    ],
+    "Java program to find Armstrong number": [
+        "import java.util.Scanner;",
+        "public class ArmstrongNumber {",
+        "    public static void main(String[] args) {",
+        "        Scanner scanner = new Scanner(System.in);",
+        "        System.out.print(\"Enter a number: \");",
+        "        int num = scanner.nextInt();",
+        "        int originalNum = num, sum = 0, remainder, n = 0;",
+        "        while (originalNum != 0) {",
+        "            originalNum /= 10;",
+        "            ++n;",
+        "        }",
+        "        originalNum = num;",
+        "        while (originalNum != 0) {",
+        "            remainder = originalNum % 10;",
+        "            sum += Math.pow(remainder, n);",
+        "            originalNum /= 10;",
+        "        }",
+        "        if (sum == num)",
+        "            System.out.println(num + \" is an Armstrong number.\");",
+        "        else",
+        "            System.out.println(num + \" is not an Armstrong number.\");",
+        "    }",
+        "}"
+    ],
+    "Java program to reverse a string": [
+        "public class ReverseString {",
+        "    public static void main(String[] args) {",
+        "        String str = \"Hello\";",
+        "        String reversed = \"\";",
+        "        for (int i = str.length() - 1; i >= 0; i--) {",
+        "            reversed += str.charAt(i);",
+        "        }",
+        "        System.out.println(\"Reversed String: \" + reversed);",
+        "    }",
+        "}"
+    ],
+    "Java program for bubble sort algorithm": [
+        "public class BubbleSort {",
+        "    public static void main(String[] args) {",
+        "        int[] arr = {64, 34, 25, 12, 22, 11, 90};",
+        "        int n = arr.length;",
+        "        for (int i = 0; i < n-1; i++) {",
+        "            for (int j = 0; j < n-i-1; j++) {",
+        "                if (arr[j] > arr[j+1]) {",
+        "                    int temp = arr[j];",
+        "                    arr[j] = arr[j+1];",
+        "                    arr[j+1] = temp;",
+        "                }",
+        "            }",
+        "        }",
+        "        System.out.println(\"Sorted array:\");",
+        "        for (int i = 0; i < n; i++) {",
+        "            System.out.print(arr[i] + \" \");",
+        "        }",
+        "    }",
+        "}"
+    ],
+    "Java program for multithreading": [
+        "public class MultithreadingExample {",
+        "    public static void main(String[] args) {",
+        "        Thread thread1 = new Thread(new Runnable() {",
+        "            public void run() {",
+        "                System.out.println(\"Thread 1 is running\");",
+        "            }",
+        "        });",
+        "        Thread thread2 = new Thread(new Runnable() {",
+        "            public void run() {",
+        "                System.out.println(\"Thread 2 is running\");",
+        "            }",
+        "        });",
+        "        thread1.start();",
+        "        thread2.start();",
+        "    }",
+        "}"
+    ],
+    "Java program for linear search": [
+        "public class LinearSearch {",
+        "    public static void main(String[] args) {",
+        "        int[] arr = {3, 5, 7, 9, 2, 8};",
+        "        int target = 7;",
+        "        boolean found = false;",
+        "        for (int i = 0; i < arr.length; i++) {",
+        "            if (arr[i] == target) {",
+        "                found = true;",
+        "                break;",
+        "            }",
+        "        }",
+        "        if (found)",
+        "            System.out.println(target + \" found in the array.\");",
+        "        else",
+        "            System.out.println(target + \" not found in the array.\");",
+        "    }",
+        "}"
+    ],
+    "Java program to find GCD of two numbers": [
+        "public class GCD {",
+        "    public static void main(String[] args) {",
+        "        int a = 56, b = 98;",
+        "        while (b != 0) {",
+        "            int temp = b;",
+        "            b = a % b;",
+        "            a = temp;",
+        "        }",
+        "        System.out.println(\"GCD of 56 and 98 is: \" + a);",
+        "    }",
+        "}"
+    ],
+    "Java program for abstract class example": [
+        "abstract class Animal {",
+        "    abstract void sound();",
+        "}",
+        "class Dog extends Animal {",
+        "    void sound() {",
+        "        System.out.println(\"Dog barks\");",
+        "    }",
+        "}",
+        "public class AbstractExample {",
+        "    public static void main(String[] args) {",
+        "        Animal myDog = new Dog();",
+        "        myDog.sound();",
+        "    }",
+        "}"
+    ],
+    "Java program to implement a stack using arrays": [
+        "public class StackExample {",
+        "    int top = -1;",
+        "    int[] stack = new int[5];",
+        "    void push(int value) {",
+        "        if (top < stack.length - 1) {",
+        "            stack[++top] = value;",
+        "            System.out.println(value + \" pushed to stack\");",
+        "        } else {",
+        "            System.out.println(\"Stack Overflow\");",
+        "        }",
+        "    }",
+        "    void pop() {",
+        "        if (top >= 0) {",
+        "            System.out.println(stack[top--] + \" popped from stack\");",
+        "        } else {",
+        "            System.out.println(\"Stack Underflow\");",
+        "        }",
+        "    }",
+        "    public static void main(String[] args) {",
+        "        StackExample stackObj = new StackExample();",
+        "        stackObj.push(10);",
+        "        stackObj.push(20);",
+        "        stackObj.pop();",
+        "    }",
+        "}"
+    ],
+    "Java program to calculate factorial using loops": [
+        "public class Factorial {",
+        "    public static void main(String[] args) {",
+        "        int num = 5;",
+        "        int factorial = 1;",
+        "        for (int i = 1; i <= num; i++) {",
+        "            factorial *= i;",
+        "        }",
+        "        System.out.println(\"Factorial of \" + num + \" is: \" + factorial);",
+        "    }",
+        "}"
+    ]
+
+    };
+
+    let currentProgram = "";
+    let timerInterval;
+    let timeElapsed = 0;
+    
+    function loadPrograms() {
+        const programList = document.getElementById("program-list");
+        for (let program in programs) {
+            let li = document.createElement("li");
+            li.innerText = program;
+            li.className = "program-item";
+            li.onclick = () => loadJumbledCode(program);
+            programList.appendChild(li);
+        }
+    }
+
+    function loadJumbledCode(program) {
+        currentProgram = program;
+        document.getElementById("program-title").innerText = program;
+        const codeContainer = document.getElementById("code-container");
+        codeContainer.innerHTML = "";
+
+        let shuffledCode = [...programs[program]].sort(() => Math.random() - 0.5);
+        shuffledCode.forEach(line => {
+            let div = document.createElement("div");
+            div.innerText = line;
+            div.className = "code-line";
+            div.draggable = true;
+            div.ondragstart = dragStart;
+            div.ondragover = dragOver;
+            div.ondrop = drop;
+            codeContainer.appendChild(div);
+        });
+
+        startTimer();
+    }
+
+    function dragStart(event) {
+        event.dataTransfer.setData("text", event.target.innerText);
+        event.target.classList.add("dragging");
+    }
+
+    function dragOver(event) {
+        event.preventDefault();
+    }
+
+    function drop(event) {
+        event.preventDefault();
+        const draggedText = event.dataTransfer.getData("text");
+        let draggedElement = document.querySelector(".dragging");
+        let targetElement = event.target;
+        if (targetElement.className.includes("code-line")) {
+            let temp = targetElement.innerText;
+            targetElement.innerText = draggedText;
+            draggedElement.innerText = temp;
+        }
+        draggedElement.classList.remove("dragging");
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timeElapsed = 0;
+        document.getElementById("timer").innerText = `Time: ${timeElapsed}s`;
+        timerInterval = setInterval(() => {
+            timeElapsed++;
+            document.getElementById("timer").innerText = `Time: ${timeElapsed}s`;
+        }, 1000);
+    }
+
+    document.getElementById("submit-button").addEventListener("click", function () {
+        let userCode = Array.from(document.getElementById("code-container").children).map(li => li.innerText.trim());
+        let correctCode = programs[currentProgram].map(line => line.trim());
+
+        if (JSON.stringify(userCode) === JSON.stringify(correctCode)) {
+            clearInterval(timerInterval);
+            alert(`✅ Well Done! You completed it in ${timeElapsed} seconds! Moving to the next question...`);
+            loadJumbledCode(Object.keys(programs)[(Object.keys(programs).indexOf(currentProgram) + 1) % Object.keys(programs).length]);
+        } else {
+            alert("❌ Incorrect! Try Again.");
+        }
+    });
+
+    loadPrograms();
+</script>
+
+</body>
+</html>

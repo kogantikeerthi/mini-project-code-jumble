@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Code Snippet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            background-color: grey;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 10px;
+            width: 100%;
+            text-align: left;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .snippet-list {
+            display: flex;
+            flex-direction: column;
+        }
+        .snippet-list button {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Code Snippet</h1>
+        <div id="snippetList" class="snippet-list"></div>
+    </div>
+
+    <script>
+        // Retrieve the selected language from the URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const lang = urlParams.get('lang');
+
+        // Snippets data categorized by language
+        const snippets = {
+            "c": [
+                "C program to print \"Hello World\"",
+                "C program to find Armstrong number",
+                "C program to print odd numbers in a range",
+                "C program to calculate factorial of a number",
+                "C program to generate Fibonacci series",
+                "C program to reverse a string",
+                "C program for matrix multiplication",
+                "C program to find the largest of three numbers",
+                "C program to count vowels in a string",
+                "C program to check if a string is a palindrome"
+            ],
+            "cpp": [
+                "C++ program to print \"Hello World\"",
+                "C++ program to find Armstrong number",
+                "C++ program to overload operators",
+                "C++ program to implement a stack using arrays",
+                "C++ program to reverse a linked list",
+                "C++ program for file handling",
+                "C++ program for binary search",
+                "C++ program for polymorphism example",
+                "C++ program to check palindrome string",
+                "C++ program for inheritance example"
+            ],
+            "python": [
+                "Python program to print \"Hello World\"",
+                "Python program to find Armstrong number",
+                "Python program to print odd numbers in a range",
+                "Python program to generate Fibonacci series",
+                "Python program to check if a string is a palindrome",
+                "Python program to read and write to a file",
+                "Python program using list comprehension",
+                "Python program for a simple calculator",
+                "Python program for class and object example",
+                "Python program for basic plotting using Matplotlib"
+            ],
+            "java": [
+                "Java program to print \"Hello World\"",
+                "Java program to find Armstrong number",
+                "Java program to reverse a string",
+                "Java program for bubble sort algorithm",
+                "Java program for multithreading",
+                "Java program for linear search",
+                "Java program to find GCD of two numbers",
+                "Java program for abstract class example",
+                "Java program to implement a stack using arrays",
+                "Java program to calculate factorial using loops"
+            ]
+        };
+
+        // Populate the list of snippets for the selected language
+        const snippetList = document.getElementById("snippetList");
+
+        if (snippets[lang]) {
+            snippets[lang].forEach((snippet, index) => {
+                const btn = document.createElement("button");
+                btn.className = "button";
+                btn.textContent = snippet;
+                btn.onclick = () => {
+                    window.location.href = `game.html?lang=${lang}&snippet=${index}`;
+                };
+                snippetList.appendChild(btn);
+            });
+        } else {
+            snippetList.innerHTML = "<p>No snippets available for the selected language.</p>";
+        }
+    </script>
+</body>
+</html>

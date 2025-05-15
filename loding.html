@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Programming Language</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 10px;
+            width: 100px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .language-selection {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Programming Language</h1>
+        <div class="language-selection">
+            <button class="button" onclick="window.location.href='snippets.html?lang=python'">Python</button>
+            <button class="button" onclick="window.location.href='snippets.html?lang=java'">Java</button>
+            <button class="button" onclick="window.location.href='snippets.html?lang=c'">C</button>
+            <button class="button" onclick="window.location.href='snippets.html?lang=c++'">C++</button>
+            <button class="button" onclick="window.location.href='snippets.html?lang=html'">HTML</button>
+            <button class="button" onclick="window.location.href='snippets.html?lang=php'">PHP</button>
+            <button class="button" onclick="window.location.href='snippets.html?lang=mysql'">MySQL</button>
+            <button class="button" onclick="window.location.href='snippets.html?lang=mysql'">R</button>
+            <button class="button" onclick="window.location.href='snippets.html?lang=mysql'">css</button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Jumbling Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .draggable {
+            cursor: move;
+            padding: 8px;
+            margin: 5px 0;
+            background: #e9ecef;
+            border: 1px solid #ddd;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        #timer {
+            font-size: 20px;
+            color: red;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Arrange the Code</h1>
+        <div id="timer">Time Remaining: 50 seconds</div>
+        <div id="jumbledCode"></div>
+        <button class="button" onclick="submitCode()">Submit</button>
+    </div>
+
+    <script>
+        // Get the language and level from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const lang = urlParams.get('lang');
+        const level = urlParams.get('level');
+
+        // Code snippets for beginner level
+        const codeSnippets = {
+            python: {
+                beginner: [
+                    "num = int(input(\"Enter a number: \"))",
+                    "if num % 2 == 0:",
+                    "    print(f\"{num} is Even\")",
+                    "else:",
+                    "    print(f\"{num} is Odd\")"
+                ]
+            },
+            java: {
+                beginner: [
+                    "import java.util.Scanner;",
+                    "public class EvenOdd {",
+                    "    public static void main(String[] args) {",
+                    "        Scanner sc = new Scanner(System.in);",
+                    "        System.out.print(\"Enter a number: \");",
+                    "        int num = sc.nextInt();",
+                    "        if (num % 2 == 0) {",
+                    "            System.out.println(num + \" is Even\");",
+                    "        } else {",
+                    "            System.out.println(num + \" is Odd\");",
+                    "        }",
+                    "    }",
+                    "}"
+                ]
+            }
+        };
+
+        // Fetch the selected snippet
+        const snippet = codeSnippets[lang]?.[level];
+        if (!snippet) {
+            document.getElementById('jumbledCode').innerHTML = `<p>Code snippet not found for ${lang} - ${level}</p>`;
+            throw new Error(`No snippet available for lang=${lang}, level=${level}`);
+        }
+
+        // Shuffle the code lines
+        const shuffledSnippet = snippet.sort(() => Math.random() - 0.5);
+
+        // Display jumbled code
+        const codeContainer = document.getElementById("jumbledCode");
+        shuffledSnippet.forEach((line, index) => {
+            const div = document.createElement("div");
+            div.className = "draggable";
+            div.textContent = line;
+            div.id = `line-${index}`;
+            div.draggable = true;
+            div.addEventListener("dragstart", dragStart);
+            codeContainer.appendChild(div);
+        });
+
+        // Drag-and-drop functionality
+        function dragStart(event) {
+            event.dataTransfer.setData("text/plain", event.target.id);
+        }
+
+        codeContainer.addEventListener("dragover", (event) => {
+            event.preventDefault();
+        });
+
+        codeContainer.addEventListener("drop", (event) => {
+            event.preventDefault();
+            const draggedId = event.dataTransfer.getData("text/plain");
+            const draggedElement = document.getElementById(draggedId);
+            const dropTarget = event.target;
+
+            // Swap the positions of the dragged element and the drop target
+            if (dropTarget.className === "draggable") {
+                const temp = dropTarget.textContent;
+                dropTarget.textContent = draggedElement.textContent;
+                draggedElement.textContent = temp;
+            }
+        });
+
+        // Timer
+        let timeRemaining = 50;
+        const timerElement = document.getElementById("timer");
+        const timer = setInterval(() => {
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                alert("Time's up! Please try again.");
+            } else {
+                timerElement.textContent = `Time Remaining: ${timeRemaining} seconds`;
+                timeRemaining--;
+            }
+        }, 1000);
+
+        // Submit function
+        function submitCode() {
+            clearInterval(timer);
+
+            // Get the current arrangement
+            const currentOrder = [...document.querySelectorAll("#jumbledCode .draggable")].map(div => div.textContent);
+
+            // Check if the order matches the correct snippet
+            if (JSON.stringify(currentOrder) === JSON.stringify(snippet)) {
+                alert("Congratulations! You've arranged the code correctly.");
+            } else {
+                alert("Oops! The code is not arranged correctly. Try again.");
+            }
+        }
+    </script>
+</body>
+</html>

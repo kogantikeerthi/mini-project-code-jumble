@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumbled Code Game</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            height: 90vh;
+            margin-top: 20px;
+        }
+        .left-panel {
+            width: 30%;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-y: auto;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .right-panel {
+            width: 70%;
+            background: #ffffff;
+            padding: 15px;
+            margin-left: 15px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .program-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .program-item:hover {
+            background-color: #f0f0f0;
+        }
+        .title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+        }
+        .code-box {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            overflow-y: auto;
+            min-height: 300px;
+            margin-bottom: 15px;
+        }
+        .code-line {
+            padding: 5px;
+            cursor: grab;
+            background-color: #ffffff;
+            margin: 3px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .code-line:hover {
+            background-color: #f1f1f1;
+        }
+        .submit-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Panel - List of Programs -->
+    <div class="left-panel">
+        <h4>Select a Program</h4>
+        <ul id="program-list"></ul>
+    </div>
+
+    <!-- Right Panel - Code Area -->
+    <div class="right-panel">
+        <div class="title-container">
+            <h4 id="program-title">Arrange the Code</h4>
+            <div class="timer" id="timer">Time: 0s</div>
+        </div>
+        <div id="code-container" class="code-box"></div>
+        <div class="submit-container">
+            <button class="btn btn-success" id="submit-button">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const programs = {
+    "Python program to print \"Hello World\"": [
+        "print(\"Hello World\")"
+    ],
+    "Python program to find Armstrong number": [
+        "def is_armstrong(num):",
+        "    order = len(str(num))",
+        "    sum = 0",
+        "    temp = num",
+        "    while temp > 0:",
+        "        digit = temp % 10",
+        "        sum += digit ** order",
+        "        temp //= 10",
+        "    return sum == num",
+        "num = int(input(\"Enter a number: \"))",
+        "if is_armstrong(num):",
+        "    print(f\"{num} is an Armstrong number.\")",
+        "else:",
+        "    print(f\"{num} is not an Armstrong number.\")"
+    ],
+    "Python program to print odd numbers in a range": [
+        "start = int(input(\"Enter the start of the range: \"))",
+        "end = int(input(\"Enter the end of the range: \"))",
+        "for num in range(start, end+1):",
+        "    if num % 2 != 0:",
+        "        print(num)"
+    ],
+    "Python program to generate Fibonacci series": [
+        "n_terms = int(input(\"Enter the number of terms: \"))",
+        "n1, n2 = 0, 1",
+        "if n_terms <= 0:",
+        "    print(\"Please enter a positive integer.\")",
+        "elif n_terms == 1:",
+        "    print(f\"Fibonacci sequence up to {n_terms}: {n1}\")",
+        "else:",
+        "    print(\"Fibonacci sequence:\")",
+        "    print(n1, n2, end=' ')",
+        "    for _ in range(2, n_terms):",
+        "        nth = n1 + n2",
+        "        print(nth, end=' ')",
+        "        n1, n2 = n2, nth"
+    ],
+    "Python program to check if a string is a palindrome": [
+        "def is_palindrome(s):",
+        "    return s == s[::-1]",
+        "string = input(\"Enter a string: \")",
+        "if is_palindrome(string):",
+        "    print(f\"{string} is a palindrome.\")",
+        "else:",
+        "    print(f\"{string} is not a palindrome.\")"
+    ],
+    "Python program to read and write to a file": [
+        "with open(\"example.txt\", \"w\") as file:",
+        "    file.write(\"This is an example file.\\n\")",
+        "    file.write(\"Python file handling.\\n\")",
+        "with open(\"example.txt\", \"r\") as file:",
+        "    content = file.read()",
+        "    print(content)"
+    ],
+    "Python program using list comprehension": [
+        "n = int(input(\"Enter the number: \"))",
+        "squares = [x**2 for x in range(1, n+1)]",
+        "print(f\"Squares from 1 to {n}: {squares}\")"
+    ],
+    "Python program for a simple calculator": [
+        "def add(x, y):",
+        "    return x + y",
+        "def subtract(x, y):",
+        "    return x - y",
+        "def multiply(x, y):",
+        "    return x * y",
+        "def divide(x, y):",
+        "    if y != 0:",
+        "        return x / y",
+        "    else:",
+        "        return \"Undefined (cannot divide by 0)\"",
+        "print(\"Select operation:\")",
+        "print(\"1. Add\")",
+        "print(\"2. Subtract\")",
+        "print(\"3. Multiply\")",
+        "print(\"4. Divide\")",
+        "choice = input(\"Enter choice (1/2/3/4): \")",
+        "num1 = float(input(\"Enter first number: \"))",
+        "num2 = float(input(\"Enter second number: \"))",
+        "if choice == '1':",
+        "    print(f\"{num1} + {num2} = {add(num1, num2)}\")",
+        "elif choice == '2':",
+        "    print(f\"{num1} - {num2} = {subtract(num1, num2)}\")",
+        "elif choice == '3':",
+        "    print(f\"{num1} * {num2} = {multiply(num1, num2)}\")",
+        "elif choice == '4':",
+        "    print(f\"{num1} / {num2} = {divide(num1, num2)}\")",
+        "else:",
+        "    print(\"Invalid input\")"
+    ],
+    "Python program for class and object example": [
+        "class Person:",
+        "    def __init__(self, name, age):",
+        "        self.name = name",
+        "        self.age = age",
+        "    def greet(self):",
+        "        print(f\"Hello, my name is {self.name} and I am {self.age} years old.\")",
+        "person1 = Person(\"John\", 25)",
+        "person1.greet()"
+    ],
+    "Python program for basic plotting using Matplotlib": [
+        "import matplotlib.pyplot as plt",
+        "x = [1, 2, 3, 4, 5]",
+        "y = [1, 4, 9, 16, 25]",
+        "plt.plot(x, y)",
+        "plt.title(\"Basic Plot\")",
+        "plt.xlabel(\"X axis\")",
+        "plt.ylabel(\"Y axis\")",
+        "plt.show()"
+    ]
+
+    };
+
+    let currentProgram = "";
+    let timerInterval;
+    let timeElapsed = 0;
+    
+    function loadPrograms() {
+        const programList = document.getElementById("program-list");
+        for (let program in programs) {
+            let li = document.createElement("li");
+            li.innerText = program;
+            li.className = "program-item";
+            li.onclick = () => loadJumbledCode(program);
+            programList.appendChild(li);
+        }
+    }
+
+    function loadJumbledCode(program) {
+        currentProgram = program;
+        document.getElementById("program-title").innerText = program;
+        const codeContainer = document.getElementById("code-container");
+        codeContainer.innerHTML = "";
+
+        let shuffledCode = [...programs[program]].sort(() => Math.random() - 0.5);
+        shuffledCode.forEach(line => {
+            let div = document.createElement("div");
+            div.innerText = line;
+            div.className = "code-line";
+            div.draggable = true;
+            div.ondragstart = dragStart;
+            div.ondragover = dragOver;
+            div.ondrop = drop;
+            codeContainer.appendChild(div);
+        });
+
+        startTimer();
+    }
+
+    function dragStart(event) {
+        event.dataTransfer.setData("text", event.target.innerText);
+        event.target.classList.add("dragging");
+    }
+
+    function dragOver(event) {
+        event.preventDefault();
+    }
+
+    function drop(event) {
+        event.preventDefault();
+        const draggedText = event.dataTransfer.getData("text");
+        let draggedElement = document.querySelector(".dragging");
+        let targetElement = event.target;
+        if (targetElement.className.includes("code-line")) {
+            let temp = targetElement.innerText;
+            targetElement.innerText = draggedText;
+            draggedElement.innerText = temp;
+        }
+        draggedElement.classList.remove("dragging");
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timeElapsed = 0;
+        document.getElementById("timer").innerText = `Time: ${timeElapsed}s`;
+        timerInterval = setInterval(() => {
+            timeElapsed++;
+            document.getElementById("timer").innerText = `Time: ${timeElapsed}s`;
+        }, 1000);
+    }
+
+    document.getElementById("submit-button").addEventListener("click", function () {
+        let userCode = Array.from(document.getElementById("code-container").children).map(li => li.innerText.trim());
+        let correctCode = programs[currentProgram].map(line => line.trim());
+
+        if (JSON.stringify(userCode) === JSON.stringify(correctCode)) {
+            clearInterval(timerInterval);
+            alert(`✅ Well Done! You completed it in ${timeElapsed} seconds! Moving to the next question...`);
+            loadJumbledCode(Object.keys(programs)[(Object.keys(programs).indexOf(currentProgram) + 1) % Object.keys(programs).length]);
+        } else {
+            alert("❌ Incorrect! Try Again.");
+        }
+    });
+
+    loadPrograms();
+</script>
+
+</body>
+</html>

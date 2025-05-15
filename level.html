@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Difficulty Level</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 10px;
+            width: 200px;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Difficulty Level</h1>
+        <div class="level-selection">
+            <!-- Extract the language from URL and pass it to the next page -->
+            <button class="button" onclick="selectLevel('beginner')">Beginner</button>
+            <button class="button" onclick="selectLevel('intermediate')">Intermediate</button>
+            <button class="button" onclick="selectLevel('advanced')">Advanced</button>
+        </div>
+    </div>
+
+    <script>
+        // Get the selected language from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const lang = urlParams.get('lang');
+
+        // Redirect to loading.html with the selected language and level
+        function selectLevel(level) {
+            // Ensure the URL format is correct
+            window.location.href = `loding.html?lang=${lang}&level=${level}`;
+        }
+    </script>
+</body>
+</html>

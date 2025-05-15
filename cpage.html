@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumbled Code Game</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            height: 90vh;
+            margin-top: 20px;
+        }
+        .left-panel {
+            width: 30%;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-y: auto;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .right-panel {
+            width: 70%;
+            background: #ffffff;
+            padding: 15px;
+            margin-left: 15px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .program-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .program-item:hover {
+            background-color: #f0f0f0;
+        }
+        .title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+        }
+        .code-box {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            overflow-y: auto;
+            min-height: 300px;
+            margin-bottom: 15px;
+        }
+        .code-line {
+            padding: 5px;
+            cursor: grab;
+            background-color: #ffffff;
+            margin: 3px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .code-line:hover {
+            background-color: #f1f1f1;
+        }
+        .submit-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Panel - List of Programs -->
+    <div class="left-panel">
+        <h4>Select a Program</h4>
+        <ul id="program-list"></ul>
+    </div>
+
+    <!-- Right Panel - Code Area -->
+    <div class="right-panel">
+        <div class="title-container">
+            <h4 id="program-title">Arrange the Code</h4>
+            <div class="timer" id="timer">Time:0s</div>
+        </div>
+        <div id="code-container" class="code-box"></div>
+        <div class="submit-container">
+            <button class="btn btn-success" id="submit-button">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const programs = {
+        "C program to print Hello World": [
+            "#include <stdio.h>",
+            "int main() {",
+            "    printf(\"Hello World\");",
+            "    return 0;",
+            "}"
+        ],
+        "C program to generate Fibonacci series": [
+            "#include <stdio.h>",
+            "int main() {",
+            "    int n1 = 0, n2 = 1, n3, i, num;",
+            "    printf(\"Enter number of terms: \");",
+            "    scanf(\"%d\", &num);",
+            "    printf(\"%d %d\", n1, n2);",
+            "    for(i = 2; i < num; ++i) {",
+            "        n3 = n1 + n2;",
+            "        printf(\" %d\", n3);",
+            "        n1 = n2;",
+            "        n2 = n3;",
+            "    }",
+            "    return 0;",
+            "}"
+        ],
+        "C program to reverse a string": [
+            "#include <stdio.h>",
+            "#include <string.h>",
+            "int main() {",
+            "    char str[100], rev[100];",
+            "    int i, len;",
+            "    printf(\"Enter a string: \");",
+            "    gets(str);",
+            "    len = strlen(str);",
+            "    for(i = 0; i < len; i++) {",
+            "        rev[i] = str[len - i - 1];",
+            "    }",
+            "    rev[i] = '\\0';",
+            "    printf(\"Reversed string: %s\", rev);",
+            "    return 0;",
+            "}"
+        ],
+    "C program for matrix multiplication": [
+        "#include <stdio.h>",
+        "int main() {",
+        "    int a[10][10], b[10][10], result[10][10], r, c, i, j, k;",
+        "    printf(\"Enter number of rows and columns: \");",
+        "    scanf(\"%d %d\", &r, &c);",
+        "    printf(\"Enter first matrix: \");",
+        "    for (i = 0; i < r; i++) {",
+        "        for (j = 0; j < c; j++) {",
+        "            scanf(\"%d\", &a[i][j]);",
+        "        }",
+        "    }",
+        "    printf(\"Enter second matrix: \");",
+        "    for (i = 0; i < r; i++) {",
+        "        for (j = 0; j < c; j++) {",
+        "            scanf(\"%d\", &b[i][j]);",
+        "        }",
+        "    }",
+        "    for (i = 0; i < r; i++) {",
+        "        for (j = 0; j < c; j++) {",
+        "            result[i][j] = 0;",
+        "            for (k = 0; k < c; k++) {",
+        "                result[i][j] += a[i][k] * b[k][j];",
+        "            }",
+        "        }",
+        "    }",
+        "    printf(\"Resultant matrix:\\n\");",
+        "    for (i = 0; i < r; i++) {",
+        "        for (j = 0; j < c; j++) {",
+        "            printf(\"%d \", result[i][j]);",
+        "        }",
+        "        printf(\"\\n\");",
+        "    }",
+        "    return 0;",
+        "}"
+    ],
+
+    "C program to find the largest of three numbers": [
+        "#include <stdio.h>",
+        "int main() {",
+        "    int a, b, c;",
+        "    printf(\"Enter three numbers: \");",
+        "    scanf(\"%d %d %d\", &a, &b, &c);",
+        "    if (a >= b && a >= c)",
+        "        printf(\"Largest number: %d\", a);",
+        "    else if (b >= a && b >= c)",
+        "        printf(\"Largest number: %d\", b);",
+        "    else",
+        "        printf(\"Largest number: %d\", c);",
+        "    return 0;",
+        "}"
+    ],
+
+    "C program to count vowels in a string": [
+        "#include <stdio.h>",
+        "#include <string.h>",
+        "int countVowels(char str[]) {",
+        "    int count = 0;",
+        "    for (int i = 0; str[i] != '\\0'; i++) {",
+        "        char ch = tolower(str[i]);",
+        "        if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u')",
+        "            count++;",
+        "    }",
+        "    return count;",
+        "}",
+        "int main() {",
+        "    char str[100];",
+        "    printf(\"Enter a string: \");",
+        "    scanf(\"%s\", str);",
+        "    printf(\"Number of vowels: %d\", countVowels(str));",
+        "    return 0;",
+        "}"
+    ],
+
+    "C program to check if a string is a palindrome": [
+        "#include <stdio.h>",
+        "#include <string.h>",
+        "int isPalindrome(char str[]) {",
+        "    int len = strlen(str);",
+        "    for (int i = 0; i < len / 2; i++) {",
+        "        if (str[i] != str[len - i - 1])",
+        "            return 0;",
+        "    }",
+        "    return 1;",
+        "}",
+        "int main() {",
+        "    char str[100];",
+        "    printf(\"Enter a string: \");",
+        "    scanf(\"%s\", str);",
+        "    if (isPalindrome(str))",
+        "        printf(\"Palindrome\");",
+        "    else",
+        "        printf(\"Not a palindrome\");",
+        "    return 0;",
+        "}"
+    ]
+
+    };
+    let currentProgram = "";
+    let timerInterval;
+    let timeElapsed = 0;
+    
+    function loadPrograms() {
+        const programList = document.getElementById("program-list");
+        for (let program in programs) {
+            let li = document.createElement("li");
+            li.innerText = program;
+            li.className = "program-item";
+            li.onclick = () => loadJumbledCode(program);
+            programList.appendChild(li);
+        }
+    }
+
+    function loadJumbledCode(program) {
+        currentProgram = program;
+        document.getElementById("program-title").innerText = program;
+        const codeContainer = document.getElementById("code-container");
+        codeContainer.innerHTML = "";
+
+        let shuffledCode = [...programs[program]].sort(() => Math.random() - 0.5);
+        shuffledCode.forEach(line => {
+            let div = document.createElement("div");
+            div.innerText = line;
+            div.className = "code-line";
+            div.draggable = true;
+            div.ondragstart = dragStart;
+            div.ondragover = dragOver;
+            div.ondrop = drop;
+            codeContainer.appendChild(div);
+        });
+
+        startTimer();
+    }
+
+    function dragStart(event) {
+        event.dataTransfer.setData("text", event.target.innerText);
+        event.target.classList.add("dragging");
+    }
+
+    function dragOver(event) {
+        event.preventDefault();
+    }
+
+    function drop(event) {
+        event.preventDefault();
+        const draggedText = event.dataTransfer.getData("text");
+        let draggedElement = document.querySelector(".dragging");
+        let targetElement = event.target;
+        if (targetElement.className.includes("code-line")) {
+            let temp = targetElement.innerText;
+            targetElement.innerText = draggedText;
+            draggedElement.innerText = temp;
+        }
+        draggedElement.classList.remove("dragging");
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timeElapsed = 0;
+        document.getElementById("timer").innerText = `Time: ${timeElapsed}s`;
+        timerInterval = setInterval(() => {
+            timeElapsed++;
+            document.getElementById("timer").innerText = `Time: ${timeElapsed}s`;
+        }, 1000);
+    }
+
+    document.getElementById("submit-button").addEventListener("click", function () {
+        let userCode = Array.from(document.getElementById("code-container").children).map(li => li.innerText.trim());
+        let correctCode = programs[currentProgram].map(line => line.trim());
+
+        if (JSON.stringify(userCode) === JSON.stringify(correctCode)) {
+            clearInterval(timerInterval);
+            alert(`✅ Well Done! You completed it in ${timeElapsed} seconds! Moving to the next question...`);
+            loadJumbledCode(Object.keys(programs)[(Object.keys(programs).indexOf(currentProgram) + 1) % Object.keys(programs).length]);
+        } else {
+            alert("❌ Incorrect! Try Again.");
+        }
+    });
+
+    loadPrograms();
+
+</script>
+
+</body>
+</html>

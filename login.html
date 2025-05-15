@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Jumbled Code</Code></title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Full-page background image */
+        body {
+            background-image: url('login1.jpg'); /* Replace with your background image path */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white; /* Ensure text is readable */
+        }
+
+        /* Curved and transparent box with shadow */
+        .card {
+            border-radius: 15px; /* Rounded corners */
+            background-color:grey; /* Transparent background */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        }
+
+        /* Styling the buttons with curved borders and shadow */
+        #adminLogin, #userLogin {
+            font-size: 1.5rem; /* Adjust the font size as needed */
+            border-radius: 15px; /* Curved corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            border: none; /* Remove button border */
+            transition: transform 0.3s ease-in-out; /* Smooth transition for movement */
+        }
+
+        /* Custom colors for Admin and User buttons */
+        #adminLogin {
+            background-color:white; /* Green color for Admin Login */
+        }
+
+        #userLogin {
+            background-color: white; /* Blue color for User Login */
+        }
+
+        /* Hover effect for both buttons */
+        #adminLogin:hover, #userLogin:hover {
+            transform: translateY(-5px); /* Move the buttons up slightly when hovered */
+        }
+
+        /* Optional: Remove underline from anchor tag in buttons */
+        #adminLogin a, #userLogin a {
+            color: black; /* Ensure text color contrasts well with button background */
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="d-flex align-items-center justify-content-center vh-100">
+        <div class="card p-5 shadow-lg" style="max-width: 500px; width: 100%;">
+            <h2 class="text-center mb-4">Jumbled Code</h2>
+            <div class="text-center mb-4">
+                <button id="adminLogin" class="btn w-100 mb-3"><a href="admin-login.html">Admin Login</a></button>
+                <button id="userLogin" class="btn w-100"><a href="user-login.html">User Login</a></button>
+            </div>
+            <form id="loginForm" style="display: none;">
+                <div class="form-group mb-3">
+                    <label for="email">Email Address</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
